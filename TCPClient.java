@@ -1,16 +1,30 @@
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class TCPClient {
-    public static void main(String[] args) {
+
+    public TCPClient() {
         try {
-            Socket socket = new Socket("localhost", 1234);
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println("Hello, server!");
-            socket.close();
+            Socket socket = new Socket("localhost", 10000);
+            PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
+//            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+            Scanner sc = new Scanner(System.in);
+            while(true) {
+//                out.write(sc.nextLine() + "\n");
+//                out.flush();
+                pw.println(sc.nextLine());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        new TCPClient();
     }
 }

@@ -1,13 +1,17 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class MultiClientServer {
-    public static void main(String[] args) {
+    public MultiClientServer() {
         try {
-            ServerSocket serverSocket = new ServerSocket(1234);
+            ServerSocket serverSocket = new ServerSocket(10000);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
+                System.out.println("클라이언트 연결 완료");
                 Thread clientThread = new Thread(new ClientHandler(clientSocket));
                 clientThread.start();
             }
@@ -15,5 +19,36 @@ public class MultiClientServer {
             e.printStackTrace();
         }
     }
-}
 
+    class ClientHandler implements Runnable {
+        private Socket clientSocket;
+        private BufferedReader in;
+        private PrintWriter out;
+
+        public ClientHandler(Socket socket) throws IOException {
+            this.clientSocket = socket;
+            this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            this.out = new PrintWriter(System.out);
+        }
+
+        @Override
+        public void run() {
+            try {
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    System.out.println("Server received: " + inputLine);
+//                    out.println("Server received: " + inputLine);
+                    out.flush();
+                }
+                clientSocket.close();
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new MultiClientServer();
+    }
+}
