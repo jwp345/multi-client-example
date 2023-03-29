@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class TCPClient {
 
-    public TCPClient() {
+    public static void main(String[] args) {
         try {
             Socket socket = new Socket("localhost", 10000);
             PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
@@ -21,9 +21,5 @@ public class TCPClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        new TCPClient();
     }
 }
