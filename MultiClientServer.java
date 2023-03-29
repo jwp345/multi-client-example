@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -28,7 +25,7 @@ public class MultiClientServer {
         public ClientHandler(Socket socket) throws IOException {
             this.clientSocket = socket;
             this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            this.out = new PrintWriter(System.out);
+            this.out = new PrintWriter(clientSocket.getOutputStream(), true);
         }
 
         @Override
@@ -37,8 +34,8 @@ public class MultiClientServer {
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     System.out.println("Server received: " + inputLine);
-//                    out.println("Server received: " + inputLine);
-                    out.flush();
+                    out.println(inputLine.toUpperCase());
+//                    out.flush();
                 }
                 clientSocket.close();
                 in.close();
